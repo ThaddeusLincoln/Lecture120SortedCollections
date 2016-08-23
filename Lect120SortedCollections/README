@@ -1,0 +1,54 @@
+LinkedHashMap and LinkedHashSet are variations of HashMap and HashSet respectively. 
+They are all sorted version of the map and set interfaces (sortedMap and sortedSet) 
+that are implemented in tree map and tree set.
+
+In Oracle's doc, the ordering of items in a HashMap or HashSet is described as chaotic. 
+But the linked versions maintain the insertion order. 
+
+NOTE : class member that do not receive any information from the constructor do not need
+ to be initialized insiside it. You can do it, but is not mandatory.
+
+Collections.unmodifiableMap() : in previous projects (making classes immutable) 
+we returned a HashMap and we did that by creating a copy so that the calling 
+code could have access to the list but we couldn't change the exits in the game. 
+That was fine, but the calling code could add new exits to the map which didn't bother 
+our class at all because the caller was working with a copy. It's probably a bit unkind 
+to let the code think it could make changes when it's actually having no effects. 
+
+To face the situacion the Collections framework provides a wrapper around the list, 
+map and set collection. Collections.unmodifiableMap(), in it's definition it says that 
+the method allows modules to provided users with read-only acccess to internal maps. 
+And attempts to modify the returned map, wether direct or via its collection views, 
+result in an UnsupportedOPerationException.
+
+We can use String.format("%.2f",...) to make sure that the doubles parsed into String only show 2 decimal values.
+
+When the content of the shopping basket are printed they appear in a random order. 
+We could have them printed in the order they were added to the basket by changing 
+the basket class from HashMap to a LinkedHashMap. But just for the sake of the argument 
+let's use TreeMap, which will be completely valid as Basket already implements Comparable. 
+
+Adding items to a TreeMap results in far more work for your code than using a HashMap, 
+and that's because each time we're entering the stock item it is using the compareTo() 
+method to check the order (comparing). The TreeMap has to check throgh its lists to find 
+the correct place to insert the new item. And of course it does that by comparing the item 
+being added. Although the treeMap implementation is quite efficient, 
+there's a performance cost to having items ordered ans that's something to consider when trying
+ to decided between a TreeMap and one of the unsorted map classes, 
+ like HashMap or LinkedHashMap which are always going to be faster because they don't need to execute extra code. 
+
+NOTE : it's very important to know that with the unmodifiable collections, 
+are the collection themselves which are unmodifiable, not its individual objects. 
+Those can be accessed and modified. So if the caller coda can access it's objects, 
+will certainly be able to modify them. If we provide the items methods (making them public) 
+we're allowing the individual items to be modified. If this is not the behavior we want 
+we'll have to figure out another method to provide the items.
+
+One possible option would be: always return a copy of the values, 
+not the actual values. For instance, if we would want to return the prices of our stock, 
+we would return the actual StokItems, but a Map<String, Double> where String=StockName
+and Double=StockPrice. So the original information remains protected, 
+we sould avoid to return any sort of collection that contains the actual object. 
+Besides of returning it as Collections.unmodifiableMap() the data types are String 
+and Double which are immutable, so it shouldn't be possible to modify them.
+
